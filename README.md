@@ -123,4 +123,3 @@ As committed in the Round 1 proposal, Round 3 will introduce three deep technica
 * **Contribution:** 100% Solo Architecture, Implementation, Design, and Documentation
 * **Event:** CodeNexus India 2026 — Round 2 (The Build)
 * **Live Link:** [https://proofline-ai.vercel.app](https://proofline-ai.vercel.app)
-* **Target:** Top 3 Finalist / Inkloom AI Incubation & PPO Opportunity
