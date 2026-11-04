@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { BrandProfile } from "@/types";
+
 export type NavTab = 'dashboard' | 'studio' | 'knowledge' | 'approvals' | 'insights';
 
 interface SidebarProps {
@@ -19,42 +21,63 @@ interface SidebarProps {
   onTabChange: (tab: NavTab) => void;
   pendingReviewsCount: number;
   unresolvedIssuesCount: number;
+  currentBrand?: BrandProfile;
+  currentRole?: 'Creator' | 'Brand Manager' | 'Legal Counsel';
 }
 
-export function Sidebar({ activeTab, onTabChange, pendingReviewsCount, unresolvedIssuesCount }: SidebarProps) {
+export function Sidebar({ 
+  activeTab, 
+  onTabChange, 
+  pendingReviewsCount, 
+  unresolvedIssuesCount,
+  currentBrand,
+  currentRole = 'Creator'
+}: SidebarProps) {
+  const brandName = currentBrand?.name || "Northstar Financial";
+  const isApex = brandName.includes("Apex");
+  const isCloud = brandName.includes("CloudScale");
+
+  const brandVersion = isApex ? "Apex Health v2.1" : isCloud ? "CloudScale v5.0" : "Northstar v3.2";
+  const policyLabel = isApex 
+    ? "FDA 21 CFR Part 11 & Clinical Fact-Vault live." 
+    : isCloud 
+      ? "SOC-2 Type II & SLA Fact-Vault live." 
+      : "SEC Rule 206(4)-1 & Fact-Vault live.";
+  const auditProof = isApex ? "Audited (FDA)" : isCloud ? "Audited (SLA)" : "Audited (KPMG)";
+
   const navItems = [
     {
       id: 'dashboard' as NavTab,
       label: 'Dashboard',
       icon: LayoutDashboard,
-      badge: null
+      badge: currentRole === 'Brand Manager' ? 'Overview' : null
     },
     {
       id: 'studio' as NavTab,
       label: 'Review Studio',
       icon: ScanSearch,
-      badge: unresolvedIssuesCount > 0 ? `${unresolvedIssuesCount} Risks` : null,
-      badgeColor: 'bg-red-100 text-red-800 border border-red-200'
+      badge: currentRole === 'Creator' ? 'Hero Tool' : `${unresolvedIssuesCount} Risks`,
+      badgeColor: currentRole === 'Creator' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-red-100 text-red-800 border border-red-200'
     },
     {
       id: 'knowledge' as NavTab,
       label: 'Brand Knowledge Hub',
       icon: BookMarked,
-      badge: '5 Facts',
+      badge: `${currentBrand?.facts.length || 5} Facts`,
       badgeColor: 'bg-blue-50 text-blue-700 border border-blue-200'
     },
     {
       id: 'approvals' as NavTab,
       label: 'Stage-Gate Approvals',
       icon: CheckSquare,
-      badge: pendingReviewsCount > 0 ? `${pendingReviewsCount} Pending` : null,
-      badgeColor: 'bg-[#4C6EF5] text-white'
+      badge: currentRole === 'Creator' ? '🔒 Submit' : `${pendingReviewsCount} Pending`,
+      badgeColor: currentRole === 'Creator' ? 'bg-slate-100 text-slate-700 border border-slate-300' : 'bg-[#4C6EF5] text-white'
     },
     {
       id: 'insights' as NavTab,
       label: 'Friction & Audit',
       icon: BarChart3,
-      badge: 'Radar',
+      badge: currentRole === 'Legal Counsel' ? 'Certificates' : 'Radar',
       badgeColor: 'bg-amber-100 text-amber-900 border border-amber-200'
     }
   ];
@@ -101,22 +124,22 @@ export function Sidebar({ activeTab, onTabChange, pendingReviewsCount, unresolve
         </div>
       </div>
 
-      {/* Brand Guide Compact Policy Status */}
+      {/* Brand Guide Dynamic Client Policy Status */}
       <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 text-xs space-y-1.5">
         <div className="flex items-center justify-between font-bold text-[#121E36]">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="h-3.5 w-3.5 text-[#50BEB8]" />
-            <span className="text-xs">Northstar v3.2</span>
+            <span className="text-xs truncate max-w-[130px]">{brandVersion}</span>
           </div>
           <span className="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded font-mono font-bold">
             Active
           </span>
         </div>
         <p className="text-[10px] text-[#69778F] leading-tight">
-          SEC Rule 206(4)-1 & Fact-Vault RAG live.
+          {policyLabel}
         </p>
         <div className="flex items-center justify-between border-t border-[#E5E8EF] pt-1.5 text-[10px] text-[#121E36]">
-          <span>Vault: <strong className="text-emerald-700">Audited</strong></span>
+          <span>Vault: <strong className="text-emerald-700">{auditProof}</strong></span>
           <span>WCAG: <strong className="text-[#4C6EF5]">2.1 AA</strong></span>
         </div>
       </div>

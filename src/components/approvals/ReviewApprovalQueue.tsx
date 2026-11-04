@@ -16,16 +16,23 @@ import {
   ChevronRight,
   Filter
 } from "lucide-react";
-import { ReviewItem, ReviewStatus, ReviewComment } from "@/types";
+import { ReviewItem, ReviewStatus, ReviewComment, BrandProfile } from "@/types";
 import { seededReviewQueue } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 
 interface ApprovalsProps {
   currentRole: 'Creator' | 'Brand Manager' | 'Legal Counsel';
   onOpenInStudio: (item: ReviewItem) => void;
+  onRoleChange?: (role: 'Creator' | 'Brand Manager' | 'Legal Counsel') => void;
+  currentBrand?: BrandProfile;
 }
 
-export function ReviewApprovalQueue({ currentRole, onOpenInStudio }: ApprovalsProps) {
+export function ReviewApprovalQueue({ 
+  currentRole, 
+  onOpenInStudio, 
+  onRoleChange,
+  currentBrand 
+}: ApprovalsProps) {
   const [items, setItems] = useState<ReviewItem[]>(seededReviewQueue);
   const [selectedItemId, setSelectedItemId] = useState<string>("rev-101");
   const [statusFilter, setStatusFilter] = useState<'all' | ReviewStatus>('all');
@@ -309,13 +316,19 @@ export function ReviewApprovalQueue({ currentRole, onOpenInStudio }: ApprovalsPr
               </div>
 
               {currentRole === 'Creator' ? (
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
-                    🔒 Self-approval restricted: Creator submissions require Brand Manager or Legal sign-off.
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  <span className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
+                    🔒 Self-approval restricted: Policy prevents creators from approving own campaigns.
                   </span>
                   <button
+                    onClick={() => onRoleChange?.('Brand Manager')}
+                    className="btn-scan flex items-center gap-1.5 rounded-lg bg-[#4C6EF5] px-3.5 py-1.5 text-xs font-bold text-white shadow-xs hover:bg-[#3b5bdb]"
+                  >
+                    <span>Switch Role to Brand Manager to Approve →</span>
+                  </button>
+                  <button
                     onClick={() => onOpenInStudio(selectedItem)}
-                    className="btn-scan rounded-lg bg-[#121E36] px-3 py-1.5 text-xs font-semibold text-white"
+                    className="rounded-lg border border-[#E5E8EF] bg-white px-3 py-1.5 text-xs font-semibold text-[#121E36] hover:bg-slate-50"
                   >
                     Edit in Studio
                   </button>

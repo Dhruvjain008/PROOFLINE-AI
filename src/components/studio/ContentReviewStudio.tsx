@@ -21,17 +21,19 @@ import {
   Layers,
   ArrowRight
 } from "lucide-react";
-import { Finding, RewriteOption, ReviewItem } from "@/types";
+import { Finding, RewriteOption, ReviewItem, BrandProfile } from "@/types";
 import { 
   sampleCampaignPresets, 
   scanDynamicContent, 
-  CampaignPreset 
+  CampaignPreset,
+  northstarBrand 
 } from "@/data/mockData";
 import { cn, getSeverityBadgeClass, getCategoryBadgeClass } from "@/lib/utils";
 
 interface StudioProps {
   currentRole: 'Creator' | 'Brand Manager' | 'Legal Counsel';
   onSubmitForApproval: (updatedItem: Partial<ReviewItem>) => void;
+  currentBrand?: BrandProfile;
 }
 
 const SCAN_STAGES = [
@@ -44,10 +46,29 @@ const SCAN_STAGES = [
   { label: "Compiling evidence-linked findings report...", pct: 100 },
 ];
 
-export function ContentReviewStudio({ currentRole, onSubmitForApproval }: StudioProps) {
+export function ContentReviewStudio({ currentRole, onSubmitForApproval, currentBrand = northstarBrand }: StudioProps) {
   const [selectedPresetId, setSelectedPresetId] = useState<string>("preset-1");
   const [draftText, setDraftText] = useState(sampleCampaignPresets[0].content);
   const [originalDraft, setOriginalDraft] = useState(sampleCampaignPresets[0].content);
+
+  // Synchronize draft when brand changes
+  useEffect(() => {
+    if (currentBrand) {
+      if (currentBrand.name.includes("Apex")) {
+        const apexDraft = "At Apex Health Technologies, our clinical sequencing platform guarantees a 100% cure rate with over 500,000 patient cohorts and miracle genomic treatment protocols.";
+        setDraftText(apexDraft);
+        setOriginalDraft(apexDraft);
+        setSelectedPresetId('custom');
+        setHasScanned(false);
+      } else if (currentBrand.name.includes("CloudScale")) {
+        const cloudDraft = "CloudScale Systems guarantees 100% unbreakable cloud security and zero latency downtime across any global mission-critical infrastructure.";
+        setDraftText(cloudDraft);
+        setOriginalDraft(cloudDraft);
+        setSelectedPresetId('custom');
+        setHasScanned(false);
+      }
+    }
+  }, [currentBrand?.name]);
   const [findings, setFindings] = useState<Finding[]>([]);
   const [selectedFindingId, setSelectedFindingId] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -479,27 +500,72 @@ export function ContentReviewStudio({ currentRole, onSubmitForApproval }: Studio
                 </button>
               </div>
               <div className="flex items-center gap-1.5 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "We deliver guaranteed 20% annualized returns.")}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-red-50 text-red-700 border border-red-200 text-[10px] font-medium transition-colors"
-                >
-                  + Guaranteed 20% Returns (SEC Promissory)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Now managing over $50 Billion in client AUM.")}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-medium transition-colors"
-                >
-                  + $50B AUM Claim (Fact-Vault Mismatch)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Invest with 100% foolproof downside protection.")}
-                  className="px-2 py-0.5 rounded bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-medium transition-colors"
-                >
-                  + Foolproof Downside Protection (FINRA 2210)
-                </button>
+                {currentBrand.name.includes("Apex") ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Guaranteed 100% cure rate in all clinical trials.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-red-50 text-red-700 border border-red-200 text-[10px] font-medium transition-colors"
+                    >
+                      + 100% Cure Rate (FDA Prohibition)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "A miracle therapeutic regimen for advanced oncology.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-medium transition-colors"
+                    >
+                      + Miracle Treatment (Sensationalist Jargon)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Validated across 500,000 patient cohorts.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-medium transition-colors"
+                    >
+                      + 500k Cohort (Fact-Vault Mismatch)
+                    </button>
+                  </>
+                ) : currentBrand.name.includes("CloudScale") ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Guaranteed 100% unbreakable cloud infrastructure.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-red-50 text-red-700 border border-red-200 text-[10px] font-medium transition-colors"
+                    >
+                      + 100% Unbreakable (SOC-2 Breach)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Revolutionary AI engine with zero downtime.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-medium transition-colors"
+                    >
+                      + Tech Hype Superlative (Voice Violation)
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "We deliver guaranteed 20% annualized returns.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-red-50 text-red-700 border border-red-200 text-[10px] font-medium transition-colors"
+                    >
+                      + Guaranteed 20% Returns (SEC Promissory)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Now managing over $50 Billion in client AUM.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-medium transition-colors"
+                    >
+                      + $50B AUM Claim (Fact-Vault Mismatch)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDraftText(prev => (prev ? prev + " " : "") + "Invest with 100% foolproof downside protection.")}
+                      className="px-2 py-0.5 rounded bg-white hover:bg-purple-50 text-purple-700 border border-purple-200 text-[10px] font-medium transition-colors"
+                    >
+                      + Foolproof Downside Protection (FINRA 2210)
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           )}

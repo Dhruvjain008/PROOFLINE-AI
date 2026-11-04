@@ -812,7 +812,7 @@ export function scanDynamicContent(text: string, isBannerCompliant: boolean = fa
       ruleName: "Vague Tech Hype Superlative",
       explanation: "Brand guidelines advise avoiding generic tech buzzwords. Specify exact quantitative methodology.",
       evidenceSource: {
-        docName: "Northstar Global Brand Voice Standards v3.2",
+        docName: "Global Brand Voice Standards",
         section: "Technology Section",
         pageRef: "Page 22",
         verifiedFact: "Prefers 'algorithmic rebalancing' or 'quantitative models'."
@@ -823,6 +823,118 @@ export function scanDynamicContent(text: string, isBannerCompliant: boolean = fa
           text: "quantitative rebalancing algorithms",
           label: "Technical & Credible",
           explanation: "Specific, credible engineering terminology."
+        }
+      ],
+      status: "unresolved"
+    });
+  }
+
+  // 6. Check for MedTech / Apex Health: "100% cure" or "cure rate"
+  if (lower.includes("100% cure") || lower.includes("cure rate")) {
+    findings.push({
+      id: "dyn-apex-01",
+      category: "claim",
+      severity: "critical",
+      targetText: text.match(/100%\s+cure\s+rate|cure\s+rate/i)?.[0] || "100% cure rate",
+      ruleCode: "RULE-FDA-1.1",
+      ruleName: "Prohibited Therapeutic Guarantee",
+      explanation: "Absolute therapeutic guarantees breach FDA and FTC clinical advertising regulations.",
+      evidenceSource: {
+        docName: "Apex Clinical Advertising & FDA Regulatory Code v2.1",
+        section: "Statutory Clinical Advertising",
+        pageRef: "Section 1.1, Page 4",
+        verifiedFact: "Absolute cures or guaranteed efficacy are strictly prohibited."
+      },
+      suggestions: [
+        {
+          id: "dyn-sug-apex-01",
+          text: "statistically significant therapeutic response",
+          label: "FDA Compliant",
+          explanation: "Replaces unbacked guarantee with clinical trial nomenclature."
+        }
+      ],
+      status: "unresolved"
+    });
+  }
+
+  // 7. Check for MedTech / Apex Health: "miracle"
+  if (lower.includes("miracle")) {
+    findings.push({
+      id: "dyn-apex-02",
+      category: "terminology",
+      severity: "critical",
+      targetText: text.match(/miracle(\s+\w+)?/i)?.[0] || "miracle",
+      ruleCode: "RULE-MED-2.4",
+      ruleName: "Sensationalist Biomedical Terminology",
+      explanation: "'Miracle' is blacklisted in biomedical standards and triggers FDA compliance review letters.",
+      evidenceSource: {
+        docName: "Apex Clinical Advertising Code",
+        section: "Prohibited Vocabulary",
+        pageRef: "Appendix A",
+        verifiedFact: "Tier 1 Prohibited Sensationalism."
+      },
+      suggestions: [
+        {
+          id: "dyn-sug-apex-02",
+          text: "evidence-based therapeutic regimen",
+          label: "Clinical Standard",
+          explanation: "Substitutes hyperbole with rigorous medical terminology."
+        }
+      ],
+      status: "unresolved"
+    });
+  }
+
+  // 8. Check for MedTech cohort size mismatch: "500,000"
+  if (lower.includes("500,000")) {
+    findings.push({
+      id: "dyn-apex-03",
+      category: "claim",
+      severity: "critical",
+      targetText: text.match(/500,000\s+patient(\s+cohorts)?/i)?.[0] || "500,000",
+      ruleCode: "FACT-CLINICAL-1.4",
+      ruleName: "Clinical Trial Cohort Scale Mismatch",
+      explanation: "Draft asserts 500,000 patients. Approved Lancet Oncology publication verifies cohort size is 148,000 validated patients.",
+      evidenceSource: {
+        docName: "Lancet Oncology Multi-Center Trial Publication",
+        section: "Cohort Demographics",
+        pageRef: "Volume 402, Page 881",
+        verifiedFact: "148,000 Validated Patient Samples across 18 Medical Centers."
+      },
+      suggestions: [
+        {
+          id: "dyn-sug-apex-03",
+          text: "148,000 validated patient samples across 18 medical centers",
+          label: "Audited & Verified",
+          explanation: "Cites officially published multi-center trial statistics."
+        }
+      ],
+      status: "unresolved"
+    });
+  }
+
+  // 9. Check for CloudScale: "unbreakable"
+  if (lower.includes("unbreakable")) {
+    findings.push({
+      id: "dyn-cs-01",
+      category: "claim",
+      severity: "critical",
+      targetText: text.match(/100%\s+unbreakable|unbreakable(\s+cloud\s+security)?/i)?.[0] || "unbreakable",
+      ruleCode: "RULE-SOC2-3.2",
+      ruleName: "Prohibited Security Absolutism",
+      explanation: "Claiming 'unbreakable' security violates SOC-2 Type II audit disclosure guidelines.",
+      evidenceSource: {
+        docName: "CloudScale Systems Master Enterprise SLA v5.0",
+        section: "Security Disclosures",
+        pageRef: "Exhibit B, Page 4",
+        verifiedFact: "Guaranteed SLA is 99.999% high availability; absolute invulnerability claims prohibited."
+      },
+      suggestions: [
+        {
+          id: "dyn-sug-cs-01",
+          text: "defense-in-depth cryptographic tenant isolation",
+          label: "SOC-2 Aligned",
+          explanation: "Substitutes absolutism with audited architectural capability."
         }
       ],
       status: "unresolved"

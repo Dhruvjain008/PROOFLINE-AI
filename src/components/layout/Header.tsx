@@ -147,14 +147,31 @@ export function Header({
               </button>
             </div>
 
-            {/* Section 1: Clarifying Multi-Tenant Client Workspaces */}
-            <div className="rounded-xl border border-blue-200 bg-[#EFF6FF]/60 p-3.5 space-y-1.5 text-xs">
+            {/* Section 1: Universal Brand Governance Platform Architecture */}
+            <div className="rounded-xl border border-blue-200 bg-[#EFF6FF]/70 p-4 space-y-2 text-xs">
               <div className="flex items-center gap-1.5 font-bold text-[#1E40AF]">
                 <Building2 className="h-4 w-4 text-[#4C6EF5]" />
-                <span>What is "Northstar Financial"? (Multi-Client Architecture)</span>
+                <span>Proofline AI — Universal Brand Governance Engine</span>
               </div>
               <p className="text-[#1E3A8A] text-[11px] leading-relaxed">
-                Proofline is built for enterprise agencies and multi-brand conglomerates. <strong>"Northstar Financial"</strong> is one of our loaded enterprise client workspaces (institutional wealth / SEC regulated). You can use the top <strong>"Client Workspace"</strong> dropdown to switch to <strong>Apex Health Technologies (MedTech/FDA)</strong> or <strong>CloudScale Systems (Enterprise Cloud/SOC-2)</strong>. Notice how the factsheets, prohibited jargon, and compliance policies immediately adapt to that company!
+                Proofline is a <strong>universal compliance and brand governance copilot</strong> built to safeguard ANY enterprise, marketing team, or agency. To prove that Proofline evaluates content across radically different industries, we have pre-loaded <strong>3 realistic industry sample datasets</strong>:
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
+                <div className="bg-white p-2.5 rounded-lg border border-blue-200 space-y-0.5">
+                  <strong className="text-[#121E36] block">1. FinTech / Wealth Demo</strong>
+                  <span className="text-[#69778F] text-[10px] block">Enforces SEC Rule 206(4)-1 promissory returns & KPMG $14.2B AUM Fact-Vault.</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-blue-200 space-y-0.5">
+                  <strong className="text-[#121E36] block">2. MedTech / FDA Demo</strong>
+                  <span className="text-[#69778F] text-[10px] block">Enforces FDA 510(k) clearance, prohibits "100% cure" claims, checks clinical cohorts.</span>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-blue-200 space-y-0.5">
+                  <strong className="text-[#121E36] block">3. Cloud / SOC-2 Demo</strong>
+                  <span className="text-[#69778F] text-[10px] block">Enforces 99.999% SLA benchmarks, SOC-2 security lexicon, prevents tech overclaims.</span>
+                </div>
+              </div>
+              <p className="text-[10px] text-blue-900 font-medium">
+                💡 Switch between sample client workspaces using the top dropdown to see guidelines, Fact-Vault, and blacklists immediately adapt!
               </p>
             </div>
 

@@ -23,13 +23,22 @@ import { cn } from "@/lib/utils";
 
 interface KnowledgeHubProps {
   currentBrand?: BrandProfile;
+  currentRole?: 'Creator' | 'Brand Manager' | 'Legal Counsel';
+  onTestFactInStudio?: (fact: ApprovedFact) => void;
 }
 
-export function BrandKnowledgeHub({ currentBrand = northstarBrand }: KnowledgeHubProps) {
+export function BrandKnowledgeHub({ 
+  currentBrand = northstarBrand,
+  currentRole = 'Creator',
+  onTestFactInStudio
+}: KnowledgeHubProps) {
   const brand = currentBrand;
   const [activeTab, setActiveTab] = useState<'facts' | 'voice' | 'terminology' | 'palette' | 'documents'>('facts');
   const [searchQuery, setSearchQuery] = useState("");
   const [facts, setFacts] = useState<ApprovedFact[]>(brand.facts);
+  const [copiedHex, setCopiedHex] = useState<string | null>(null);
+  const [copiedVoiceText, setCopiedVoiceText] = useState<string | null>(null);
+  const [selectedManualDoc, setSelectedManualDoc] = useState<any | null>(null);
 
   React.useEffect(() => {
     setFacts(brand.facts);
@@ -56,10 +65,10 @@ export function BrandKnowledgeHub({ currentBrand = northstarBrand }: KnowledgeHu
       id: `fact-${Date.now()}`,
       claim: newClaim,
       approvedFigure: newFigure,
-      sourceDoc: newSource || "Internal Financial Ledger v2",
-      pageRef: "Schedule 1",
-      verifiedDate: "Today",
-      category: "Financials"
+      sourceDoc: newSource || `${brand.name} Master Disclosure Statement`,
+      pageRef: "Schedule A, Pg 1",
+      verifiedDate: "Just now",
+      category: "Compliance"
     };
     setFacts([newEntry, ...facts]);
     setNewClaim("");
@@ -190,6 +199,19 @@ export function BrandKnowledgeHub({ currentBrand = northstarBrand }: KnowledgeHu
                     📄 {fact.sourceDoc}
                   </div>
                 </div>
+
+                <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                  <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 font-bold">
+                    ✓ Verified Grounding
+                  </span>
+                  <button
+                    onClick={() => onTestFactInStudio?.(fact)}
+                    className="flex items-center gap-1 text-[11px] font-bold text-[#4C6EF5] hover:text-[#121E36] hover:underline transition-colors"
+                  >
+                    <span>Test in Studio</span>
+                    <ExternalLink className="h-3 w-3" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -287,80 +309,165 @@ export function BrandKnowledgeHub({ currentBrand = northstarBrand }: KnowledgeHu
 
       {/* TAB 4: Visual Palette & WCAG Swatches */}
       {activeTab === 'palette' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {brand.colors.map((color, i) => (
-            <div 
-              key={color.hex} 
-              className={cn(
-                "animate-slideUp anim-hidden card-lift rounded-xl border border-[#E5E8EF] bg-white p-5 shadow-sm space-y-3",
-                i === 0 && "delay-100",
-                i === 1 && "delay-200",
-                i === 2 && "delay-300",
-                i >= 3 && "delay-400"
-              )}
-            >
+        <div className="space-y-3">
+          <div className="flex items-center justify-between text-xs text-[#69778F]">
+            <span>Click any swatch to copy certified HEX code to clipboard</span>
+            {copiedHex && (
+              <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded animate-fadeIn">
+                ✓ Copied {copiedHex} to clipboard!
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {brand.colors.map((color, i) => (
               <div 
-                className="h-28 w-full rounded-lg border border-black/10 shadow-inner flex items-end p-3"
-                style={{ backgroundColor: color.hex }}
+                key={color.hex}
+                onClick={() => {
+                  navigator.clipboard.writeText(color.hex);
+                  setCopiedHex(color.hex);
+                  setTimeout(() => setCopiedHex(null), 2500);
+                }}
+                className={cn(
+                  "animate-slideUp anim-hidden card-lift rounded-xl border border-[#E5E8EF] bg-white p-5 shadow-sm space-y-3 cursor-pointer group hover:border-[#4C6EF5] transition-all",
+                  i === 0 && "delay-100",
+                  i === 1 && "delay-200",
+                  i === 2 && "delay-300",
+                  i >= 3 && "delay-400"
+                )}
               >
-                <span className="font-mono text-xs font-bold px-2 py-1 rounded bg-black/40 text-white">
-                  {color.hex}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-sm font-bold text-[#121E36]">{color.name}</h3>
-                  <span className="text-xs text-[#69778F]">{color.role} Palette</span>
+                <div 
+                  className="h-28 w-full rounded-lg border border-black/10 shadow-inner flex items-end justify-between p-3 group-hover:scale-[1.01] transition-transform"
+                  style={{ backgroundColor: color.hex }}
+                >
+                  <span className="font-mono text-xs font-bold px-2 py-1 rounded bg-black/50 text-white">
+                    {color.hex}
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white text-[#121E36] shadow-xs">
+                    {copiedHex === color.hex ? "✓ Copied!" : "Click to Copy"}
+                  </span>
                 </div>
-                <span className="rounded bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold">
-                  WCAG AA PASS
-                </span>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-bold text-[#121E36]">{color.name}</h3>
+                    <span className="text-xs text-[#69778F]">{color.role} Palette</span>
+                  </div>
+                  <span className="rounded bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold">
+                    WCAG AA PASS
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 
       {/* TAB 5: Guideline Manuals */}
       {activeTab === 'documents' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {brand.guidelines.map((doc, i) => (
-            <div 
-              key={doc.id} 
-              className={cn(
-                "animate-slideUp anim-hidden card-lift rounded-xl border border-[#E5E8EF] bg-white p-5 shadow-sm space-y-4",
-                i === 0 && "delay-100",
-                i === 1 && "delay-200",
-                i === 2 && "delay-300"
-              )}
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-[#4C6EF5]">
-                  <FileText className="h-5 w-5" />
+        <div className="space-y-4">
+          <div className="text-xs text-[#69778F]">
+            Showing ingested corporate brand manuals and regulatory compliance statutes.
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {brand.guidelines.map((doc, i) => (
+              <div 
+                key={doc.id} 
+                className={cn(
+                  "animate-slideUp anim-hidden card-lift rounded-xl border border-[#E5E8EF] bg-white p-5 shadow-sm space-y-4 hover:border-[#4C6EF5] transition-all",
+                  i === 0 && "delay-100",
+                  i === 1 && "delay-200",
+                  i === 2 && "delay-300"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-[#4C6EF5]">
+                    <FileText className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-bold text-[#121E36] leading-snug">{doc.title}</h3>
+                    <span className="text-[11px] text-[#69778F]">{doc.version} • {doc.category}</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xs font-bold text-[#121E36] leading-snug">{doc.title}</h3>
-                  <span className="text-[11px] text-[#69778F]">{doc.version} • {doc.category}</span>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#FAF7EF] p-2.5 rounded-lg border border-[#E5E8EF]">
+                  <div>
+                    <span className="text-[#69778F] block">Indexed Rules:</span>
+                    <strong className="text-[#121E36]">{doc.rulesCount} active clauses</strong>
+                  </div>
+                  <div>
+                    <span className="text-[#69778F] block">File Size:</span>
+                    <strong className="text-[#121E36]">{doc.fileSize}</strong>
+                  </div>
                 </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-[#E5E8EF] text-xs">
+                  <span className="text-[11px] text-[#69778F]">Updated {doc.lastUpdated}</span>
+                  <span className="text-emerald-600 font-semibold text-[11px]">Vector Ingested ✓</span>
+                </div>
+
+                <button
+                  onClick={() => setSelectedManualDoc(doc)}
+                  className="w-full py-1.5 px-3 rounded-lg border border-[#E5E8EF] bg-[#FAF7EF] hover:bg-[#121E36] hover:text-white text-xs font-semibold text-[#121E36] transition-all flex items-center justify-center gap-1.5"
+                >
+                  <BookMarked className="h-3 w-3" />
+                  <span>Inspect Indexed Clauses ({doc.rulesCount})</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Inspect Indexed Clauses */}
+      {selectedManualDoc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="animate-scaleIn w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl space-y-4 border border-[#E5E8EF]">
+            <div className="flex items-center justify-between border-b border-[#E5E8EF] pb-3">
+              <div className="flex items-center gap-2">
+                <FileCheck className="h-4 w-4 text-[#4C6EF5]" />
+                <h3 className="text-sm font-bold text-[#121E36]">{selectedManualDoc.title}</h3>
+              </div>
+              <span className="text-[10px] bg-blue-50 text-blue-700 px-2 py-0.5 rounded font-mono font-bold">
+                {selectedManualDoc.version}
+              </span>
+            </div>
+            
+            <p className="text-xs text-[#69778F]">
+              Deterministic rule clauses parsed from this document and actively enforced during Pre-Flight Scans:
+            </p>
+
+            <div className="space-y-2 max-h-60 overflow-y-auto text-xs">
+              <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF] space-y-1">
+                <div className="flex items-center justify-between text-[11px]">
+                  <strong className="text-[#121E36]">Clause 3.1: Non-Promissory Standard</strong>
+                  <span className="text-red-600 font-bold">Critical</span>
+                </div>
+                <p className="text-[10px] text-[#69778F]">No performance figure may be characterized as guaranteed, risk-free, or foolproof.</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[11px] bg-[#FAF7EF] p-2.5 rounded-lg border border-[#E5E8EF]">
-                <div>
-                  <span className="text-[#69778F] block">Indexed Rules:</span>
-                  <strong className="text-[#121E36]">{doc.rulesCount} active clauses</strong>
+              <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF] space-y-1">
+                <div className="flex items-center justify-between text-[11px]">
+                  <strong className="text-[#121E36]">Clause 4.2: Factual Scale Metric Grounding</strong>
+                  <span className="text-red-600 font-bold">Critical</span>
                 </div>
-                <div>
-                  <span className="text-[#69778F] block">File Size:</span>
-                  <strong className="text-[#121E36]">{doc.fileSize}</strong>
-                </div>
+                <p className="text-[10px] text-[#69778F]">Any assertions regarding assets under management, clinical trial cohorts, or SLAs must cite independent audit documentation.</p>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-[#E5E8EF] text-xs">
-                <span className="text-[11px] text-[#69778F]">Updated {doc.lastUpdated}</span>
-                <span className="text-emerald-600 font-semibold text-[11px]">Vector Ingested ✓</span>
+              <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF] space-y-1">
+                <div className="flex items-center justify-between text-[11px]">
+                  <strong className="text-[#121E36]">Clause 5.3: W3C Accessibility Compliance</strong>
+                  <span className="text-amber-600 font-bold">Warning</span>
+                </div>
+                <p className="text-[10px] text-[#69778F]">All syndication banners must adhere to minimum 4.5:1 text-to-background contrast ratio.</p>
               </div>
             </div>
-          ))}
+
+            <button
+              onClick={() => setSelectedManualDoc(null)}
+              className="w-full py-2 rounded-lg bg-[#121E36] text-white text-xs font-bold hover:bg-[#1E2D4A]"
+            >
+              Close Viewer
+            </button>
+          </div>
         </div>
       )}
 
