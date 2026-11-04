@@ -8,27 +8,25 @@ export function Footer() {
 
   return (
     <>
-      <footer className="border-t border-[#E5E8EF] bg-white py-6 px-4 md:px-8 mt-12 text-xs text-[#69778F]">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-[#E5E8EF] bg-white/90 py-3 px-4 md:px-6 mt-12 text-xs text-[#69778F]">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
           
           {/* Left: Branding & Status */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-1.5 font-bold text-[#121E36]">
-              <ShieldCheck className="h-4 w-4 text-[#50BEB8]" />
+          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+            <div className="flex items-center gap-1 font-bold text-[#121E36]">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#50BEB8]" />
               <span>Proofline AI</span>
             </div>
             <span className="text-slate-300">|</span>
-            <span className="text-[11px]">
-              Team FALCON (Dhruv Jain) • CodeNexus India 2026
-            </span>
-            <div className="hidden sm:flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-800">
+            <span>Team FALCON (Dhruv Jain) • CodeNexus India 2026</span>
+            <span className="hidden md:inline-flex items-center gap-1 rounded bg-emerald-50 text-emerald-800 text-[10px] font-semibold px-2 py-0.5 border border-emerald-200">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>SOC-2 Type II Aligned • Fiduciary v3.2 Active</span>
-            </div>
+              SOC-2 Aligned
+            </span>
           </div>
 
           {/* Right: Policy & Legal Modals */}
-          <div className="flex flex-wrap items-center gap-4 text-[11px] font-medium">
+          <div className="flex flex-wrap items-center gap-3 text-[11px] font-medium">
             <button
               onClick={() => setModalType('privacy')}
               className="hover:text-[#121E36] hover:underline flex items-center gap-1 transition-colors"
@@ -36,6 +34,7 @@ export function Footer() {
               <Lock className="h-3 w-3 text-[#4C6EF5]" />
               <span>Privacy Policy</span>
             </button>
+            <span className="text-slate-200">•</span>
             <button
               onClick={() => setModalType('terms')}
               className="hover:text-[#121E36] hover:underline flex items-center gap-1 transition-colors"
@@ -43,6 +42,7 @@ export function Footer() {
               <FileText className="h-3 w-3 text-[#50BEB8]" />
               <span>Terms of Service</span>
             </button>
+            <span className="text-slate-200">•</span>
             <button
               onClick={() => setModalType('regulatory')}
               className="hover:text-[#121E36] hover:underline flex items-center gap-1 transition-colors"
@@ -52,11 +52,6 @@ export function Footer() {
             </button>
           </div>
 
-        </div>
-
-        <div className="max-w-7xl mx-auto mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] text-slate-400">
-          <p>© 2026 Proofline AI. Built for enterprise marketing teams, brand stewards, and compliance officers.</p>
-          <p>Deterministic regex parsing + Zero-hallucination Fact-Vault + W3C WCAG 2.1 AA luminance algorithms.</p>
         </div>
       </footer>
 

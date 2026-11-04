@@ -68,8 +68,8 @@ export default function Home() {
           unresolvedIssuesCount={5}
         />
 
-        <main className="flex-1 min-w-0 flex flex-col justify-between">
-          <div className="p-3 md:p-4 space-y-3">
+        <main className="flex-1 min-w-0 overflow-y-auto flex flex-col justify-between min-h-[calc(100vh-3.5rem)]">
+          <div className="p-3 md:p-5 space-y-3.5 flex-1">
             
             {/* Dynamic Role & Workspace Context Strip */}
             <div className="rounded-xl border border-[#E5E8EF] bg-white px-3.5 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2 text-xs">

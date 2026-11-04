@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { 
   ShieldCheck, 
   Sparkles, 
@@ -16,6 +16,17 @@ import {
   Zap,
   Check
 } from "lucide-react";
+import { 
+  ResponsiveContainer, 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ReferenceLine, 
+  Cell 
+} from "recharts";
 import { mockGovernanceMetrics, seededReviewQueue } from "@/data/mockData";
 
 interface DashboardProps {
@@ -32,9 +43,14 @@ export function Dashboard({
   onNavigateToInsights 
 }: DashboardProps) {
   const metrics = mockGovernanceMetrics;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
-    <div className="flex-1 p-4 md:p-5 space-y-4 max-w-7xl mx-auto w-full">
+    <div className="space-y-4 max-w-7xl mx-auto w-full">
 
       {/* ─── Compact Command Header ─── */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#E5E8EF] pb-3">
@@ -48,7 +64,7 @@ export function Dashboard({
             </span>
           </div>
           <p className="text-xs text-[#69778F] mt-0.5">
-            Intercepting marketing claims, copy, and visual banners prior to syndication
+            Intercepting marketing claims, copy, and visual banners prior to public syndication
           </p>
         </div>
 
@@ -157,56 +173,110 @@ export function Dashboard({
       {/* ─── Middle Section: Trend Chart & Active Risk Intercepts ─── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
-        {/* Compliance Trend Chart (7 cols) */}
+        {/* Compliance Trend Chart (7 cols) — POWERED BY RECHARTS */}
         <div className="lg:col-span-7 rounded-xl border border-[#E5E8EF] bg-white p-4 shadow-sm space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h2 className="text-xs font-bold text-[#121E36]">Weekly Pre-Flight Compliance Trend</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xs font-bold text-[#121E36]">Weekly Pre-Flight Compliance Trend</h2>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200 text-[10px] font-bold text-amber-800">
+                  <span className="w-2.5 border-t-2 border-dashed border-amber-500" />
+                  <span>Target: 80%</span>
+                </span>
+              </div>
               <p className="text-[10px] text-[#69778F]">Average compliance score of scanned campaigns per day</p>
             </div>
             <button 
               onClick={onNavigateToInsights}
-              className="text-[11px] font-semibold text-[#4C6EF5] hover:underline flex items-center gap-1 transition-colors"
+              className="text-[11px] font-semibold text-[#4C6EF5] hover:underline flex items-center gap-1 transition-colors self-start sm:self-auto"
             >
               <span>Friction Radar</span>
               <ArrowUpRight className="h-3 w-3" />
             </button>
           </div>
 
-          {/* Clean Bar Chart */}
-          <div className="h-36 flex items-end justify-between gap-2 pt-2 px-1 relative">
-            {/* Target line */}
-            <div className="absolute bottom-[40%] left-0 right-0 border-t border-dashed border-[#E5E8EF] flex items-center">
-              <span className="text-[8px] font-semibold text-[#69778F] bg-white pr-1 leading-none">80% Target</span>
-            </div>
-
-            {metrics.weeklyTrend.map((item, i) => {
-              const barHeight = Math.max(10, (item.complianceScore - 50) * 2);
-              const isAboveTarget = item.complianceScore >= 80;
-              return (
-                <div key={item.day} className="flex-1 flex flex-col items-center gap-1 h-full justify-end group cursor-default">
-                  <span className="text-[9px] font-bold text-[#69778F] opacity-0 group-hover:opacity-100 transition-opacity">
-                    {item.complianceScore}%
-                  </span>
-                  <div 
-                    className="w-full max-w-[32px] rounded-t group-hover:opacity-80 transition-all"
-                    style={{ 
-                      height: `${barHeight}%`,
-                      backgroundColor: isAboveTarget ? '#121E36' : '#D99019'
+          {/* Professional Recharts BarChart — Zero Overlapping White Boxes */}
+          <div className="h-44 w-full pt-1">
+            {mounted ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={metrics.weeklyTrend} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E8EF" />
+                  <XAxis 
+                    dataKey="day" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#69778F', fontSize: 11, fontWeight: 500 }} 
+                  />
+                  <YAxis 
+                    domain={[60, 100]} 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fill: '#69778F', fontSize: 10 }}
+                    tickFormatter={(val) => `${val}%`}
+                  />
+                  <Tooltip 
+                    cursor={{ fill: 'rgba(76, 110, 245, 0.04)' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="rounded-lg bg-[#121E36] px-3 py-2 text-white shadow-xl text-xs border border-white/10 space-y-0.5">
+                            <div className="font-bold flex items-center justify-between gap-3">
+                              <span>{data.day} Compliance</span>
+                              <span className={data.complianceScore >= 80 ? "text-[#50BEB8]" : "text-[#D99019]"}>
+                                {data.complianceScore}%
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-300">
+                              {data.scans} pre-flight campaign scans
+                            </div>
+                            <div className="text-[9px] text-slate-400">
+                              {data.complianceScore >= 80 ? "✓ Passed 80% Fiduciary Gate" : "⚠️ Remediation Required (<80%)"}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
                   />
-                  <span className="text-[10px] font-semibold text-[#121E36]">{item.day}</span>
-                </div>
-              );
-            })}
+                  {/* Clean 80% ReferenceLine WITHOUT any overlapping text box over Monday */}
+                  <ReferenceLine 
+                    y={80} 
+                    stroke="#D99019" 
+                    strokeDasharray="4 4" 
+                    strokeWidth={1.5}
+                  />
+                  <Bar dataKey="complianceScore" radius={[5, 5, 0, 0]} maxBarSize={34}>
+                    {metrics.weeklyTrend.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.complianceScore >= 80 ? '#121E36' : '#D99019'} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-xs text-[#69778F]">Loading compliance trend...</div>
+            )}
           </div>
 
-          <div className="flex items-center justify-between text-[10px] text-[#69778F] pt-1 border-t border-[#E5E8EF]">
+          {/* Clean Legend with 80% Target Indicator */}
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#69778F] pt-2.5 border-t border-[#E5E8EF]">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1"><span className="h-1.5 w-2.5 rounded-sm bg-[#121E36] inline-block" />Above Target</span>
-              <span className="flex items-center gap-1"><span className="h-1.5 w-2.5 rounded-sm bg-[#D99019] inline-block" />Below 80%</span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-xs bg-[#121E36]" />
+                <span className="font-medium text-[#121E36]">Compliant (≥80%)</span>
+              </span>
+              <span className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-xs bg-[#D99019]" />
+                <span className="font-medium text-[#D99019]">Remediation (&lt;80%)</span>
+              </span>
             </div>
-            <span className="text-emerald-700 font-semibold">7-Day Avg: 87.1%</span>
+            <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 text-[10px] flex items-center gap-1">
+              <TrendingUp className="h-3 w-3" />
+              <span>7-Day Rolling Avg: 87.1%</span>
+            </span>
           </div>
         </div>
 
