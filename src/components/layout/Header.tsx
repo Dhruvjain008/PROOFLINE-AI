@@ -10,27 +10,37 @@ import {
   X,
   Zap,
   CheckCircle2,
-  Palette,
-  Send,
-  Eye
+  Building2,
+  Scale,
+  FileCheck2,
+  Lock,
+  Layers
 } from "lucide-react";
 
 interface HeaderProps {
   currentRole: 'Creator' | 'Brand Manager' | 'Legal Counsel';
   onRoleChange: (role: 'Creator' | 'Brand Manager' | 'Legal Counsel') => void;
+  selectedBrandName: string;
+  onBrandChange: (brandName: string) => void;
   onNewReviewClick: () => void;
 }
 
-export function Header({ currentRole, onRoleChange, onNewReviewClick }: HeaderProps) {
+export function Header({ 
+  currentRole, 
+  onRoleChange, 
+  selectedBrandName,
+  onBrandChange,
+  onNewReviewClick 
+}: HeaderProps) {
   const [guideOpen, setGuideOpen] = useState(false);
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E8EF] bg-white/95 backdrop-blur-sm px-4 md:px-6 shadow-sm">
-        {/* Left: Logo & Brand */}
-        <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-[#E5E8EF] bg-white/95 backdrop-blur-sm px-3 md:px-5 shadow-xs">
+        {/* Left: Logo & Brand Workspace Selector */}
+        <div className="flex items-center gap-2.5">
           <div className="flex items-center gap-2">
-            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#121E36] text-[#FFF1C1] shadow-sm">
+            <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[#121E36] text-[#FFF1C1] shadow-xs">
               <ShieldCheck className="h-4 w-4" />
               <span className="absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full bg-[#50BEB8] border-2 border-white" />
             </div>
@@ -51,71 +61,81 @@ export function Header({ currentRole, onRoleChange, onNewReviewClick }: HeaderPr
 
           <div className="hidden lg:flex h-5 w-px bg-[#E5E8EF] mx-1" />
 
-          {/* Active Policy Pill */}
-          <div className="hidden lg:flex items-center gap-1.5 rounded-lg border border-[#E5E8EF] bg-[#FAF7EF] px-2.5 py-1 text-[11px]">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#50BEB8] animate-pulse" />
-            <span className="font-semibold text-[#121E36]">Northstar Financial</span>
-            <span className="text-[10px] text-[#69778F]">(SEC v3.2 Active)</span>
+          {/* Active Enterprise Client Workspace Switcher */}
+          <div className="hidden sm:flex items-center gap-1.5 rounded-lg border border-[#E5E8EF] bg-[#FAF7EF] px-2 py-1 text-xs">
+            <Building2 className="h-3.5 w-3.5 text-[#4C6EF5] shrink-0" />
+            <span className="text-[10px] text-[#69778F] font-medium hidden md:inline">Client Workspace:</span>
+            <select
+              value={selectedBrandName}
+              onChange={(e) => onBrandChange(e.target.value)}
+              className="text-xs font-bold text-[#121E36] bg-transparent outline-none cursor-pointer pr-1"
+              title="Switch Active Corporate Brand Workspace"
+            >
+              <option value="Northstar Financial">Northstar Financial (FinTech / SEC)</option>
+              <option value="Apex Health Technologies">Apex Health (MedTech / FDA)</option>
+              <option value="CloudScale Systems">CloudScale Systems (Cloud / SOC-2)</option>
+            </select>
           </div>
         </div>
 
         {/* Right Controls */}
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-2 md:gap-2.5">
           
           {/* Step-by-Step Evaluator Guide Button */}
           <button
             onClick={() => setGuideOpen(true)}
-            className="flex items-center gap-1.5 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] hover:bg-[#FEF3C7] px-2.5 py-1.5 text-[11px] font-bold text-[#92400E] shadow-sm transition-all"
-            title="Open step-by-step evaluation guide"
+            className="flex items-center gap-1.5 rounded-lg border border-[#FDE68A] bg-[#FFFBEB] hover:bg-[#FEF3C7] px-2.5 py-1.5 text-[11px] font-bold text-[#92400E] shadow-xs transition-all"
+            title="Open Complete Evaluator & Architecture Guide"
           >
             <BookOpen className="h-3.5 w-3.5 text-[#D99019]" />
             <span>How to Use / Guide</span>
             <span className="h-1.5 w-1.5 rounded-full bg-[#D99019] animate-pulse" />
           </button>
 
-          {/* Role Selector */}
-          <div className="flex items-center gap-1.5 rounded-lg border border-[#E5E8EF] bg-white px-2 py-1 text-xs">
+          {/* Role Switcher */}
+          <div className="flex items-center gap-1 rounded-lg border border-[#E5E8EF] bg-white px-2 py-1 text-xs shadow-2xs">
             <UserCheck className="h-3.5 w-3.5 text-[#50BEB8] shrink-0" />
-            <span className="text-[10px] text-[#69778F] hidden sm:inline">Role:</span>
+            <span className="text-[10px] text-[#69778F] hidden md:inline">Role:</span>
             <select 
               value={currentRole}
               onChange={(e) => onRoleChange(e.target.value as any)}
               className="text-xs font-semibold text-[#121E36] bg-transparent outline-none cursor-pointer pr-1"
+              title="Switch between Creator, Brand Manager, and Legal Counsel roles"
             >
-              <option value="Creator">Content Creator</option>
-              <option value="Brand Manager">Brand Manager</option>
-              <option value="Legal Counsel">Legal & Compliance</option>
+              <option value="Creator">✏️ Content Creator</option>
+              <option value="Brand Manager">🛡️ Brand Manager</option>
+              <option value="Legal Counsel">⚖️ Legal Counsel</option>
             </select>
           </div>
 
           {/* Primary CTA */}
           <button
             onClick={onNewReviewClick}
-            className="btn-scan flex items-center gap-1.5 rounded-lg bg-[#121E36] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm"
+            className="btn-scan flex items-center gap-1.5 rounded-lg bg-[#121E36] px-3 py-1.5 text-xs font-bold text-white shadow-xs"
           >
-            <Sparkles className="h-3.5 w-3.5 text-[#FFF1C1]" />
-            <span>New Pre-Flight Scan</span>
+            <Sparkles className="h-3 w-3 text-[#FFF1C1]" />
+            <span>New Scan</span>
           </button>
         </div>
       </header>
 
-      {/* ─── Step-by-Step Judge / Evaluator Walkthrough Modal ─── */}
+      {/* ─── Comprehensive Evaluator Guide & Architecture Modal ─── */}
       {guideOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/45 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="animate-scaleIn w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl border border-[#E5E8EF] max-h-[90vh] overflow-y-auto space-y-4">
+          <div className="animate-scaleIn w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl border border-[#E5E8EF] max-h-[90vh] overflow-y-auto space-y-4">
             
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-[#E5E8EF] pb-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <div className="h-8 w-8 rounded-lg bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#4C6EF5]">
                   <Zap className="h-4 w-4" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-[#121E36]">
-                    Proofline AI — Evaluator Quick-Start Guide
+                    Proofline AI — Judge & Evaluator Master Guide
                   </h3>
                   <p className="text-[11px] text-[#69778F]">
-                    Follow this 60-second end-to-end walkthrough to test all core capabilities
+                    How Proofline transforms enterprise compliance into an automated, evidence-first workflow
                   </p>
                 </div>
               </div>
@@ -127,73 +147,77 @@ export function Header({ currentRole, onRoleChange, onNewReviewClick }: HeaderPr
               </button>
             </div>
 
-            {/* Step-by-Step Cards */}
-            <div className="space-y-2.5 text-xs">
+            {/* Section 1: Clarifying Multi-Tenant Client Workspaces */}
+            <div className="rounded-xl border border-blue-200 bg-[#EFF6FF]/60 p-3.5 space-y-1.5 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-[#1E40AF]">
+                <Building2 className="h-4 w-4 text-[#4C6EF5]" />
+                <span>What is "Northstar Financial"? (Multi-Client Architecture)</span>
+              </div>
+              <p className="text-[#1E3A8A] text-[11px] leading-relaxed">
+                Proofline is built for enterprise agencies and multi-brand conglomerates. <strong>"Northstar Financial"</strong> is one of our loaded enterprise client workspaces (institutional wealth / SEC regulated). You can use the top <strong>"Client Workspace"</strong> dropdown to switch to <strong>Apex Health Technologies (MedTech/FDA)</strong> or <strong>CloudScale Systems (Enterprise Cloud/SOC-2)</strong>. Notice how the factsheets, prohibited jargon, and compliance policies immediately adapt to that company!
+              </p>
+            </div>
+
+            {/* Section 2: Role-Based Human-in-the-Loop Governance */}
+            <div className="rounded-xl border border-[#E5E8EF] bg-white p-3.5 space-y-2 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-[#121E36]">
+                <UserCheck className="h-4 w-4 text-[#50BEB8]" />
+                <span>How Role Switching Works (Test All 3 Perspectives!)</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF]">
+                  <strong className="text-[#121E36] block mb-0.5">✏️ Content Creator</strong>
+                  <p className="text-[#69778F]">Drafts marketing copy, runs pre-flight scans, applies 1-click intent-preserving rewrites, and submits for approval. <em>Cannot self-approve.</em></p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF]">
+                  <strong className="text-[#121E36] block mb-0.5">🛡️ Brand Manager</strong>
+                  <p className="text-[#69778F]">Reviews creator exception justifications, approves campaigns for syndication, and manages approved facts and voice rules in the Knowledge Hub.</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-[#FAF7EF] border border-[#E5E8EF]">
+                  <strong className="text-[#121E36] block mb-0.5">⚖️ Legal & Compliance</strong>
+                  <p className="text-[#69778F]">Validates claims against auditor statements (KPMG), enforces SEC Rule 206(4)-1, and issues cryptographic compliance certificates with SHA-256 seals.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: The 5 Complete Tools in Proofline */}
+            <div className="space-y-2 text-xs">
+              <span className="font-bold uppercase tracking-wider text-[#69778F] text-[10px] block">
+                The 5 Integrated Governance Tools
+              </span>
               
-              <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 flex gap-3 items-start">
-                <span className="h-6 w-6 rounded-full bg-[#121E36] text-[#FFF1C1] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
-                <div>
-                  <strong className="text-[#121E36] block mb-0.5">Choose a Campaign Preset or Enter Your Own Custom Text</strong>
-                  <p className="text-[#69778F] text-[11px] leading-relaxed">
-                    In <strong>Review Studio</strong>, pick from <strong>Example 1 (High Risk)</strong>, <strong>Example 2 (AUM Mismatch)</strong>, <strong>Example 3 (Contrast Failure)</strong>, or choose <strong>Custom Draft</strong> to type/paste your own marketing text!
-                  </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                <div className="p-2.5 rounded-lg border border-[#E5E8EF] bg-white">
+                  <strong className="text-[#121E36] block">1. Executive Dashboard</strong>
+                  <p className="text-[#69778F]">Real-time compliance index (89.2%), intercepted risks (382), weekly compliance velocity chart, and live risk alerts.</p>
+                </div>
+                <div className="p-2.5 rounded-lg border border-[#E5E8EF] bg-white">
+                  <strong className="text-[#121E36] block">2. Review Studio (Hero Engine)</strong>
+                  <p className="text-[#69778F]">7-stage pre-flight scanner, dynamic in-line text highlighting, 4-part evidence cards, 1-click rewrites, Git diff, and WCAG AA banner harmonizer.</p>
+                </div>
+                <div className="p-2.5 rounded-lg border border-[#E5E8EF] bg-white">
+                  <strong className="text-[#121E36] block">3. Brand Knowledge Hub</strong>
+                  <p className="text-[#69778F]">Single source of truth: Audited Fact-Vault with verified figures, Voice Pillars (Do/Don't), Prohibited Lexicon, and WCAG certified swatches.</p>
+                </div>
+                <div className="p-2.5 rounded-lg border border-[#E5E8EF] bg-white">
+                  <strong className="text-[#121E36] block">4. Stage-Gate Approvals & Friction Radar</strong>
+                  <p className="text-[#69778F]">Human-in-the-loop review queue with collaborative comment thread, approval decisions, and human override rate analytics.</p>
                 </div>
               </div>
-
-              <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 flex gap-3 items-start">
-                <span className="h-6 w-6 rounded-full bg-[#4C6EF5] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
-                <div>
-                  <strong className="text-[#121E36] block mb-0.5">Run the Pre-Flight Scan</strong>
-                  <p className="text-[#69778F] text-[11px] leading-relaxed">
-                    Click <strong>"Run Pre-Flight Scan"</strong>. Watch the cinematic 7-stage engine verify regex patterns, query the Audited Fact-Vault, and compute mathematical WCAG luminance contrast.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 flex gap-3 items-start">
-                <span className="h-6 w-6 rounded-full bg-[#D99019] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
-                <div>
-                  <strong className="text-[#121E36] block mb-0.5">Click Flagged Words & Apply 1-Click Intent-Preserving Rewrites</strong>
-                  <p className="text-[#69778F] text-[11px] leading-relaxed">
-                    Click any underlined phrase (e.g. <em>"guaranteed 18% returns"</em> or <em>"$25B AUM"</em>) to see the <strong>4-Part Evidence Card</strong> citing KPMG audits and SEC rules. Click <strong>"Apply Fix"</strong> to auto-harmonize the working draft!
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 flex gap-3 items-start">
-                <span className="h-6 w-6 rounded-full bg-[#50BEB8] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">4</span>
-                <div>
-                  <strong className="text-[#121E36] block mb-0.5">Harmonize Visual Banner (WCAG 2.1 AA)</strong>
-                  <p className="text-[#69778F] text-[11px] leading-relaxed">
-                    Switch to the <strong>Visual & WCAG</strong> tab. Click <strong>"1-Click Harmonize Banner"</strong> to automatically transition off-brand purple to approved Deep Navy with legal 6.8:1 contrast.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-[#E5E8EF] bg-[#FAF7EF] p-3 flex gap-3 items-start">
-                <span className="h-6 w-6 rounded-full bg-[#C94C4C] text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">5</span>
-                <div>
-                  <strong className="text-[#121E36] block mb-0.5">Submit & Sign-Off in Stage-Gate Queue</strong>
-                  <p className="text-[#69778F] text-[11px] leading-relaxed">
-                    Click <strong>"Submit for Manager Sign-Off"</strong>. Switch roles to <strong>Brand Manager</strong> or <strong>Legal Counsel</strong> in the header and execute the final approval decision!
-                  </p>
-                </div>
-              </div>
-
             </div>
 
             {/* Modal Footer */}
             <div className="flex items-center justify-between pt-3 border-t border-[#E5E8EF]">
-              <span className="text-[11px] text-[#69778F]">No account or API key required • Zero-latency demo</span>
+              <span className="text-[11px] text-[#69778F]">100% Client-Side State • Tested & Verified for CodeNexus 2026</span>
               <button
                 onClick={() => {
                   setGuideOpen(false);
                   onNewReviewClick();
                 }}
-                className="btn-scan flex items-center gap-2 rounded-xl bg-[#121E36] px-4 py-2 text-xs font-bold text-white shadow-sm"
+                className="btn-scan flex items-center gap-1.5 rounded-lg bg-[#121E36] px-4 py-2 text-xs font-bold text-white shadow-xs"
               >
-                <span>Launch Review Studio Demo</span>
-                <ArrowRight className="h-3.5 w-3.5 text-[#FFF1C1]" />
+                <span>Start Review Studio Demo</span>
+                <ArrowRight className="h-3 w-3 text-[#FFF1C1]" />
               </button>
             </div>
 

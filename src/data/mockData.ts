@@ -146,6 +146,146 @@ export const northstarBrand: BrandProfile = {
   ]
 };
 
+export const apexHealthBrand: BrandProfile = {
+  name: "Apex Health Technologies",
+  sector: "Digital Diagnostics & Precision Genomics",
+  tagline: "Clinical Rigor for Human Longevity",
+  voiceAttributes: [
+    {
+      name: "Empirical & Peer-Reviewed",
+      description: "All therapeutic claims must cite double-blind, peer-reviewed clinical studies. No anecdotal hype.",
+      exampleDo: "Clinical trial Phase III demonstrated 94.2% diagnostic concordance across 12,000 patient cohorts.",
+      exampleDont: "Our miracle breakthrough cures diseases overnight with magical precision."
+    },
+    {
+      name: "Patient-First Compassion",
+      description: "Communicate complex biomedical data with empathy and transparent contraindication disclosures.",
+      exampleDo: "Consult with a board-certified physician to evaluate individual genomic markers.",
+      exampleDont: "Skip your doctor's visit and let our automated AI diagnose you instantly."
+    }
+  ],
+  colors: [
+    { hex: "#064E3B", name: "Deep Forest", role: "Primary", isApproved: true },
+    { hex: "#0D9488", name: "Clinical Teal", role: "Secondary", isApproved: true },
+    { hex: "#10B981", name: "Vitality Green", role: "Accent", isApproved: true },
+    { hex: "#F0FDF4", name: "Soft Mint", role: "Background", isApproved: true },
+    { hex: "#FEF3C7", name: "Warm Amber", role: "Accent", isApproved: true }
+  ],
+  facts: [
+    {
+      id: "apex-01",
+      claim: "FDA 510(k) Clearance Status",
+      approvedFigure: "Cleared under FDA 510(k) K231849 for Automated Cellular Morphometry",
+      sourceDoc: "FDA Center for Devices & Radiological Health Letter",
+      pageRef: "Clearance Letter, Section 2",
+      verifiedDate: "Jan 18, 2024",
+      category: "Compliance"
+    },
+    {
+      id: "apex-02",
+      claim: "Clinical Trial Cohort Size",
+      approvedFigure: "148,000 Validated Patient Samples across 18 Medical Centers",
+      sourceDoc: "Lancet Oncology Multi-Center Trial Publication",
+      pageRef: "Volume 402, Page 881",
+      verifiedDate: "May 2024",
+      category: "Scale"
+    }
+  ],
+  prohibitedTerms: [
+    {
+      term: "100% cure rate",
+      severity: "critical",
+      replacement: "statistically significant therapeutic response",
+      rationale: "Absolute therapeutic guarantees breach FDA and FTC medical advertising statutes.",
+      ruleRef: "Medical Advertising Code Rule 1.1"
+    },
+    {
+      term: "miracle treatment",
+      severity: "critical",
+      replacement: "evidence-based therapeutic regimen",
+      rationale: "Sensationalist biomedical claims incur severe FDA warning letters.",
+      ruleRef: "Brand Guideline Rule 2.4"
+    }
+  ],
+  guidelines: [
+    {
+      id: "apex-doc-01",
+      title: "Apex Clinical Advertising & FDA Regulatory Code",
+      version: "v2.1",
+      lastUpdated: "January 2024",
+      fileSize: "5.4 MB",
+      rulesCount: 46,
+      category: "Regulatory & Clinical"
+    }
+  ]
+};
+
+export const cloudScaleBrand: BrandProfile = {
+  name: "CloudScale Systems",
+  sector: "Enterprise Cloud Infrastructure & Distributed Edge",
+  tagline: "Resilient Computing for Global Enterprises",
+  voiceAttributes: [
+    {
+      name: "Engineering Precision",
+      description: "State operational SLAs, millisecond latency figures, and ISO standards with exact benchmarks.",
+      exampleDo: "Our multi-region control plane achieved 99.999% SLA availability across 42 availability zones.",
+      exampleDont: "Our insane server speeds will melt your competitors' faces off."
+    }
+  ],
+  colors: [
+    { hex: "#0F172A", name: "Midnight Slate", role: "Primary", isApproved: true },
+    { hex: "#4F46E5", name: "Electric Indigo", role: "Secondary", isApproved: true },
+    { hex: "#0EA5E9", name: "Sky Cyan", role: "Accent", isApproved: true },
+    { hex: "#F8FAFC", name: "Clean Slate", role: "Background", isApproved: true }
+  ],
+  facts: [
+    {
+      id: "cs-01",
+      claim: "Annual Platform SLA Availability",
+      approvedFigure: "99.999% Guaranteed High-Availability SLA",
+      sourceDoc: "Master Enterprise Service Level Agreement (SLA v5.0)",
+      pageRef: "Exhibit B, Page 4",
+      verifiedDate: "Feb 01, 2024",
+      category: "Scale"
+    },
+    {
+      id: "cs-02",
+      claim: "Information Security Certifications",
+      approvedFigure: "SOC-2 Type II, ISO/IEC 27001:2022, and FedRAMP Moderate Authorized",
+      sourceDoc: "Ernst & Young SOC-2 Type II Audit Report",
+      pageRef: "Executive Summary, Page 2",
+      verifiedDate: "Sep 15, 2024",
+      category: "Compliance"
+    }
+  ],
+  prohibitedTerms: [
+    {
+      term: "unhackable",
+      severity: "critical",
+      replacement: "defense-in-depth zero-trust security architecture",
+      rationale: "Absolute security guarantees are factually inaccurate and create unlimited corporate liability.",
+      ruleRef: "Security Policy Rule 6.2"
+    }
+  ],
+  guidelines: [
+    {
+      id: "cs-doc-01",
+      title: "CloudScale Technical Editorial & Security Governance",
+      version: "v3.0",
+      lastUpdated: "March 2024",
+      fileSize: "3.6 MB",
+      rulesCount: 30,
+      category: "Technical & Security"
+    }
+  ]
+};
+
+export const availableBrands: BrandProfile[] = [
+  northstarBrand,
+  apexHealthBrand,
+  cloudScaleBrand
+];
+
 export interface CampaignPreset {
   id: string;
   name: string;

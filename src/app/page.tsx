@@ -10,19 +10,33 @@ import { ReviewApprovalQueue } from "@/components/approvals/ReviewApprovalQueue"
 import { InsightsAudit } from "@/components/insights/InsightsAudit";
 import { Footer } from "@/components/layout/Footer";
 import { ReviewItem } from "@/types";
-import { seededReviewQueue } from "@/data/mockData";
+import { seededReviewQueue, availableBrands, northstarBrand } from "@/data/mockData";
+import { Building2, UserCheck, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
+  const [selectedBrandName, setSelectedBrandName] = useState<string>("Northstar Financial");
   const [currentRole, setCurrentRole] = useState<'Creator' | 'Brand Manager' | 'Legal Counsel'>('Brand Manager');
   const [reviewQueue, setReviewQueue] = useState<ReviewItem[]>(seededReviewQueue);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const selectedBrand = availableBrands.find(b => b.name === selectedBrandName) || northstarBrand;
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
       setToastMessage(null);
     }, 3500);
+  };
+
+  const handleRoleChange = (newRole: 'Creator' | 'Brand Manager' | 'Legal Counsel') => {
+    setCurrentRole(newRole);
+    showToast(`✓ Active Role updated: ${newRole} — Permissions & action gates refreshed!`);
+  };
+
+  const handleBrandChange = (newBrandName: string) => {
+    setSelectedBrandName(newBrandName);
+    showToast(`🏢 Switched client workspace to: ${newBrandName}`);
   };
 
   const handleStudioSubmit = (updatedItem: Partial<ReviewItem>) => {
@@ -39,7 +53,9 @@ export default function Home() {
       {/* Sticky Slim Top Header */}
       <Header
         currentRole={currentRole}
-        onRoleChange={setCurrentRole}
+        onRoleChange={handleRoleChange}
+        selectedBrandName={selectedBrandName}
+        onBrandChange={handleBrandChange}
         onNewReviewClick={() => setActiveTab('studio')}
       />
 
@@ -53,7 +69,35 @@ export default function Home() {
         />
 
         <main className="flex-1 min-w-0 flex flex-col justify-between">
-          <div className="p-2 md:p-3">
+          <div className="p-3 md:p-4 space-y-3">
+            
+            {/* Dynamic Role & Workspace Context Strip */}
+            <div className="rounded-xl border border-[#E5E8EF] bg-white px-3.5 py-2 shadow-2xs flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 font-bold text-[#121E36]">
+                  <Building2 className="h-3.5 w-3.5 text-[#4C6EF5]" />
+                  <span>{selectedBrand.name}</span>
+                </span>
+                <span className="text-slate-300">|</span>
+                <span className="text-[11px] text-[#69778F]">
+                  Sector: <strong>{selectedBrand.sector}</strong>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] text-[#69778F]">Active Permission Mode:</span>
+                <span className="rounded-md bg-[#FAF7EF] border border-[#E5E8EF] px-2 py-0.5 text-[11px] font-bold text-[#121E36] flex items-center gap-1">
+                  <UserCheck className="h-3 w-3 text-[#50BEB8]" />
+                  <span>
+                    {currentRole === 'Creator' && "✏️ Creator Mode (Drafting & Pre-Flight Scan)"}
+                    {currentRole === 'Brand Manager' && "🛡️ Brand Manager Mode (Full Approval & Policy Gate)"}
+                    {currentRole === 'Legal Counsel' && "⚖️ Legal Counsel Mode (Fiduciary Claims Audit Sign-Off)"}
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            {/* Active View Component */}
             {activeTab === 'dashboard' && (
               <Dashboard
                 onNavigateToStudio={() => setActiveTab('studio')}
@@ -71,7 +115,9 @@ export default function Home() {
             )}
 
             {activeTab === 'knowledge' && (
-              <BrandKnowledgeHub />
+              <BrandKnowledgeHub 
+                currentBrand={selectedBrand}
+              />
             )}
 
             {activeTab === 'approvals' && (

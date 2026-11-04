@@ -18,13 +18,22 @@ import {
   Sparkles
 } from "lucide-react";
 import { northstarBrand } from "@/data/mockData";
-import { BrandColor, ApprovedFact, ProhibitedTerm } from "@/types";
+import { BrandColor, ApprovedFact, ProhibitedTerm, BrandProfile } from "@/types";
 import { cn } from "@/lib/utils";
 
-export function BrandKnowledgeHub() {
+interface KnowledgeHubProps {
+  currentBrand?: BrandProfile;
+}
+
+export function BrandKnowledgeHub({ currentBrand = northstarBrand }: KnowledgeHubProps) {
+  const brand = currentBrand;
   const [activeTab, setActiveTab] = useState<'facts' | 'voice' | 'terminology' | 'palette' | 'documents'>('facts');
   const [searchQuery, setSearchQuery] = useState("");
-  const [facts, setFacts] = useState<ApprovedFact[]>(northstarBrand.facts);
+  const [facts, setFacts] = useState<ApprovedFact[]>(brand.facts);
+
+  React.useEffect(() => {
+    setFacts(brand.facts);
+  }, [brand]);
   const [newFactModalOpen, setNewFactModalOpen] = useState(false);
   const [newClaim, setNewClaim] = useState("");
   const [newFigure, setNewFigure] = useState("");
@@ -36,7 +45,7 @@ export function BrandKnowledgeHub() {
     f.sourceDoc.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredProhibited = northstarBrand.prohibitedTerms.filter(p =>
+  const filteredProhibited = brand.prohibitedTerms.filter(p =>
     p.term.toLowerCase().includes(searchQuery.toLowerCase()) ||
     p.replacement.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -71,7 +80,7 @@ export function BrandKnowledgeHub() {
             <span className="text-xs text-[#69778F]">Policy Engine v3.2</span>
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-[#121E36]">
-            {northstarBrand.name} — Brand Knowledge Hub
+            {brand.name} — Brand Knowledge Hub
           </h1>
           <p className="text-xs text-[#69778F] max-w-xl mt-1">
             The definitive single source of truth for guidelines, audited factsheets, prohibited terminology, and certified visual assets.
@@ -91,10 +100,10 @@ export function BrandKnowledgeHub() {
       <div className="animate-slideUp anim-hidden delay-100 flex items-center gap-2 border-b border-[#E5E8EF] pb-3 overflow-x-auto">
         {[
           { id: 'facts', label: 'Approved Fact-Vault (RAG)', icon: FileCheck, badge: `${facts.length}` },
-          { id: 'voice', label: 'Tone & Voice Attributes', icon: Sparkles, badge: '3 Pillars' },
-          { id: 'terminology', label: 'Prohibited Vocabulary', icon: Ban, badge: `${northstarBrand.prohibitedTerms.length}` },
-          { id: 'palette', label: 'Visual Palette & WCAG', icon: Palette, badge: `${northstarBrand.colors.length}` },
-          { id: 'documents', label: 'Guideline Manuals (PDF)', icon: BookMarked, badge: `${northstarBrand.guidelines.length}` }
+          { id: 'voice', label: 'Tone & Voice Attributes', icon: Sparkles, badge: `${brand.voiceAttributes.length} Pillars` },
+          { id: 'terminology', label: 'Prohibited Vocabulary', icon: Ban, badge: `${brand.prohibitedTerms.length}` },
+          { id: 'palette', label: 'Visual Palette & WCAG', icon: Palette, badge: `${brand.colors.length}` },
+          { id: 'documents', label: 'Guideline Manuals (PDF)', icon: BookMarked, badge: `${brand.guidelines.length}` }
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -190,7 +199,7 @@ export function BrandKnowledgeHub() {
       {/* TAB 2: Tone & Voice Attributes */}
       {activeTab === 'voice' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {northstarBrand.voiceAttributes.map((voice, i) => (
+          {brand.voiceAttributes.map((voice, i) => (
             <div 
               key={voice.name} 
               className={cn(
@@ -279,7 +288,7 @@ export function BrandKnowledgeHub() {
       {/* TAB 4: Visual Palette & WCAG Swatches */}
       {activeTab === 'palette' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {northstarBrand.colors.map((color, i) => (
+          {brand.colors.map((color, i) => (
             <div 
               key={color.hex} 
               className={cn(
@@ -315,7 +324,7 @@ export function BrandKnowledgeHub() {
       {/* TAB 5: Guideline Manuals */}
       {activeTab === 'documents' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {northstarBrand.guidelines.map((doc, i) => (
+          {brand.guidelines.map((doc, i) => (
             <div 
               key={doc.id} 
               className={cn(
