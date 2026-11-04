@@ -27,20 +27,23 @@ import {
   ReferenceLine, 
   Cell 
 } from "recharts";
-import { mockGovernanceMetrics, seededReviewQueue } from "@/data/mockData";
+import { mockGovernanceMetrics, seededReviewQueue, northstarBrand } from "@/data/mockData";
+import { BrandProfile } from "@/types";
 
 interface DashboardProps {
   onNavigateToStudio: () => void;
   onNavigateToApprovals: () => void;
   onNavigateToKnowledge: () => void;
   onNavigateToInsights: () => void;
+  currentBrand?: BrandProfile;
 }
 
 export function Dashboard({ 
   onNavigateToStudio, 
   onNavigateToApprovals, 
   onNavigateToKnowledge, 
-  onNavigateToInsights 
+  onNavigateToInsights,
+  currentBrand = northstarBrand
 }: DashboardProps) {
   const metrics = mockGovernanceMetrics;
   const [mounted, setMounted] = useState(false);
@@ -438,7 +441,9 @@ export function Dashboard({
         <div className="lg:col-span-4 rounded-xl border border-[#E5E8EF] bg-white p-4 shadow-sm space-y-3 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xs font-bold text-[#121E36]">Northstar Brand Assets</h2>
+              <h2 className="text-xs font-bold text-[#121E36] truncate max-w-[190px]">
+                {currentBrand.name} Assets
+              </h2>
               <button
                 onClick={onNavigateToKnowledge}
                 className="text-[10px] font-semibold text-[#4C6EF5] hover:underline"
@@ -450,17 +455,11 @@ export function Dashboard({
             <div className="space-y-3">
               <div>
                 <div className="text-[9px] font-bold uppercase text-[#69778F] mb-1.5">Approved Swatches (WCAG AA)</div>
-                <div className="flex gap-1.5">
-                  {[
-                    { hex: '#121E36', name: 'Navy' },
-                    { hex: '#4C6EF5', name: 'Blue' },
-                    { hex: '#50BEB8', name: 'Teal' },
-                    { hex: '#FAF7EF', name: 'Ivory', border: true },
-                    { hex: '#FFF1C1', name: 'Cream', border: true },
-                  ].map(c => (
+                <div className="flex gap-1.5 flex-wrap">
+                  {currentBrand.colors.slice(0, 5).map(c => (
                     <div key={c.hex} className="flex flex-col items-center gap-0.5 cursor-default" title={c.name}>
                       <div
-                        className={`h-7 w-7 rounded-md shadow-xs ${c.border ? 'border border-[#E5E8EF]' : ''}`}
+                        className="h-7 w-7 rounded-md shadow-xs border border-[#E5E8EF]"
                         style={{ backgroundColor: c.hex }}
                       />
                       <span className="text-[8px] font-mono text-[#69778F]">{c.hex}</span>
@@ -474,11 +473,13 @@ export function Dashboard({
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[11px] font-bold text-[#121E36]">Audited Fact-Vault</span>
                   <span className="text-[9px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded">
-                    5 Verified Claims
+                    {currentBrand.facts.length} Verified Claims
                   </span>
                 </div>
                 <p className="text-[10px] text-[#69778F] leading-tight">
-                  KPMG Q3 Audit: &ldquo;$14.2B USD in active custodial AUM&rdquo;
+                  {currentBrand.facts[0] 
+                    ? `${currentBrand.facts[0].claim}: "${currentBrand.facts[0].approvedFigure}"`
+                    : "Zero-hallucination audited corporate grounding live"}
                 </p>
               </div>
             </div>

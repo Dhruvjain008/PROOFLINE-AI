@@ -443,14 +443,28 @@ export function ContentReviewStudio({ currentRole, onSubmitForApproval, currentB
 
       {/* ─── Clean Zero-Issue Result ─── */}
       {hasScanned && !isScanning && findings.length === 0 && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 text-center space-y-2">
-          <div className="mx-auto h-8 w-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 text-center space-y-3">
+          <div className="mx-auto h-9 w-9 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
             <CheckCircle2 className="h-5 w-5" />
           </div>
-          <h3 className="text-sm font-bold text-emerald-900">Zero Compliance Violations Detected!</h3>
-          <p className="text-xs text-emerald-800 max-w-md mx-auto">
-            Your draft complies with all approved Northstar factsheets, SEC Rule 206(4)-1 non-promissory standards, and WCAG accessibility guidelines.
-          </p>
+          <div>
+            <h3 className="text-sm font-bold text-emerald-900">Zero Compliance Violations Detected! (Score: 100/100)</h3>
+            <p className="text-xs text-emerald-800 max-w-md mx-auto mt-1">
+              Your draft complies with all approved <strong>{currentBrand.name}</strong> guidelines, regulatory standards, and WCAG accessibility requirements.
+            </p>
+          </div>
+          <div className="pt-1">
+            <button
+              onClick={() => { onSubmitForApproval({ draftContent: draftText, complianceScore: 100 }); setIsSubmitted(true); }}
+              disabled={isSubmitted}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold text-white shadow-xs transition-all",
+                isSubmitted ? "bg-emerald-600 cursor-default" : "bg-[#121E36] hover:bg-[#1E2D4A]"
+              )}
+            >
+              {isSubmitted ? <><Check className="h-3.5 w-3.5" /><span>Submitted for Review ✓</span></> : <><Send className="h-3.5 w-3.5" /><span>Submit Compliant Draft for Sign-Off →</span></>}
+            </button>
+          </div>
         </div>
       )}
 

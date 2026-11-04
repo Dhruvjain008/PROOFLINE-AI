@@ -160,6 +160,7 @@ export default function Home() {
                 onNavigateToApprovals={() => setActiveTab('approvals')}
                 onNavigateToKnowledge={() => setActiveTab('knowledge')}
                 onNavigateToInsights={() => setActiveTab('insights')}
+                currentBrand={selectedBrand}
               />
             )}
 
