@@ -5,7 +5,7 @@ export type FindingCategory = 'claim' | 'tone' | 'terminology' | 'visual' | 'acc
 export interface RewriteOption {
   id: string;
   text: string;
-  label: 'Direct & Crisp' | 'Authoritative & Compliant' | 'Conversational & Safe';
+  label: 'Direct & Crisp' | 'Authoritative & Compliant' | 'Conversational & Safe' | string;
   explanation: string;
 }
 
