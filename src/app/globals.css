@@ -1,0 +1,252 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy: #121E36;
+  --creamy-yellow: #FFF1C1;
+  --ivory: #FAF7EF;
+  --white: #FFFFFF;
+  --teal: #50BEB8;
+  --royal-blue: #4C6EF5;
+  --slate: #69778F;
+  --soft-border: #E5E8EF;
+  --amber: #D99019;
+  --red: #C94C4C;
+}
+
+body {
+  background-color: #FAF7EF;
+  color: #121E36;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: #FAF7EF; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+::selection { background-color: #FFF1C1; color: #121E36; }
+
+/* ─── Keyframe Animations ─── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes scanProgress {
+  0% { width: 0%; }
+  20% { width: 25%; }
+  50% { width: 55%; }
+  75% { width: 78%; }
+  90% { width: 90%; }
+  100% { width: 100%; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 110, 245, 0.4); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(76, 110, 245, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 110, 245, 0); }
+}
+
+@keyframes findingSlide {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scoreCount {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3); }
+  50% { opacity: 1; transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Utility Animation Classes */
+.animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+.animate-slideUp { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-slideInLeft { animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-scaleIn { animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-scanProgress { animation: scanProgress 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-pulseRing { animation: pulse-ring 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite; }
+.animate-findingSlide { animation: findingSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-scoreCount { animation: scoreCount 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-bounceIn { animation: bounceIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* Stagger helpers */
+.delay-100 { animation-delay: 100ms; }
+.delay-150 { animation-delay: 150ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-900 { animation-delay: 900ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* Initial hidden state for staggered elements */
+.anim-hidden { opacity: 0; }
+
+/* ─── Shimmer Skeleton Loader ─── */
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+/* ─── Card Hover Effects ─── */
+.card-lift {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s;
+}
+.card-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(18, 30, 54, 0.08);
+  border-color: #CBD5E1;
+}
+
+/* ─── Scan Button Pulse ─── */
+.btn-scan {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-scan:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(76, 110, 245, 0.35); }
+.btn-scan:active { transform: scale(0.97); }
+.btn-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+}
+
+/* ─── Wavy underline for flagged text ─── */
+.flagged-critical {
+  background-color: rgba(201, 76, 76, 0.12);
+  border-bottom: 2px wavy #C94C4C;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 1px 3px;
+}
+.flagged-critical:hover { background-color: rgba(201, 76, 76, 0.2); }
+.flagged-critical.selected { background-color: #FFF1C1; outline: 2px solid #C94C4C; border-radius: 3px; }
+
+.flagged-warning {
+  background-color: rgba(217, 144, 25, 0.12);
+  border-bottom: 2px wavy #D99019;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 1px 3px;
+}
+.flagged-warning:hover { background-color: rgba(217, 144, 25, 0.2); }
+.flagged-warning.selected { background-color: #FFF1C1; outline: 2px solid #D99019; border-radius: 3px; }
+
+.flagged-suggestion {
+  background-color: rgba(76, 110, 245, 0.08);
+  border-bottom: 2px solid #4C6EF5;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 1px 3px;
+}
+.flagged-suggestion:hover { background-color: rgba(76, 110, 245, 0.15); }
+.flagged-suggestion.selected { background-color: #FFF1C1; outline: 2px solid #4C6EF5; border-radius: 3px; }
+
+.flagged-applied {
+  background-color: rgba(80, 190, 184, 0.15);
+  border-bottom: 2px solid #50BEB8;
+  border-radius: 2px;
+  padding: 1px 3px;
+  color: #50BEB8;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* ─── Score ring ─── */
+.score-ring {
+  stroke-dasharray: 251.2;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Professional Table Rows ─── */
+.table-row-hover { transition: background-color 0.15s ease; }
+.table-row-hover:hover { background-color: #FAF7EF; }
+
+/* ─── Focus ring override ─── */
+*:focus-visible {
+  outline: 2px solid #4C6EF5;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Selection text highlight ─── */
+::selection { background-color: #FFF1C1; color: #121E36; }
+
+/* ─── Toast animation ─── */
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-toastIn { animation: toastIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* ─── Prefers reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
